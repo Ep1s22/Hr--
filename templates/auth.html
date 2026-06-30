@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Авторизация / Регистрация</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        body {
+            background-color: #121416;
+            color: #e3e6e8;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #1a1d20;
+            border-bottom: 2px solid #2ecc71;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #2ecc71;
+        }
+        header nav a {
+            color: #b0b7bd;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        header nav a:hover {
+            color: #2ecc71;
+        }
+        main {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 50px 20px;
+            flex-wrap: wrap;
+        }
+        section {
+            background: #1a1d20;
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid #2c3136;
+            width: 360px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+        h2 {
+            margin-top: 0;
+            margin-bottom: 25px;
+            color: #ffffff;
+            font-size: 1.4rem;
+            border-bottom: 1px solid #2c3136;
+            padding-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #b0b7bd;
+            font-size: 0.9rem;
+        }
+        input[type="text"],
+        input[type="password"],
+        input[type="email"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #2c3136;
+            background-color: #25292d;
+            color: #ffffff;
+            box-sizing: border-box;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2ecc71;
+        }
+        button[type="submit"] {
+            width: 100%;
+            background: #2ecc71;
+            color: #121416;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: background 0.2s, transform 0.1s;
+            margin-top: 10px;
+        }
+        button[type="submit"]:hover {
+            background: #27ae60;
+        }
+        button[type="submit"]:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>HR-Портал</h1>
+        <nav><a href="/">Главная</a> | <a href="/vacancies">Каталог</a></nav>
+    </header>
+
+    <main>
+        <section>
+            <h2>Войти в аккаунт</h2>
+            <form action="/api/login" method="POST">
+                <div class="form-group">
+                    <label>Логин</label>
+                    <input type="text" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label>Пароль</label>
+                    <input type="password" name="password" required>
+                </div>
+                <button type="submit">Войти</button>
+            </form>
+        </section>
+
+        <section>
+            <h2>Создать аккаунт</h2>
+            <form action="/api/register" method="POST">
+                <div class="form-group">
+                    <label>Логин</label>
+                    <input type="text" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Пароль</label>
+                    <input type="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label>ФИО</label>
+                    <input type="text" name="full_name" required>
+                </div>
+                <div class="form-group">
+                    <label>Телефон</label>
+                    <input type="text" name="phone" placeholder="+7..." required>
+                </div>
+                <div class="form-group">
+                    <label>Кто вы?</label>
+                    <select name="role">
+                        <option value="candidate">Соискатель (ищу работу)</option>
+                        <option value="recruiter">Рекрутер (ищу сотрудников)</option>
+                    </select>
+                </div>
+                <button type="submit">Зарегистрироваться</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

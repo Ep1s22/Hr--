@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        body {
+            background-color: #121416;
+            color: #e3e6e8;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            padding: 20px 30px;
+            background: #1a1d20;
+            border-bottom: 2px solid #2ecc71;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.6rem;
+            color: #2ecc71;
+        }
+        header p {
+            margin: 8px 0;
+            color: #b0b7bd;
+        }
+        header strong {
+            color: #ffffff;
+        }
+        header nav style { display:none; }
+        .nav-links a {
+            color: #b0b7bd;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .nav-links a:hover {
+            color: #2ecc71;
+        }
+        .nav-links .logout-btn {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .nav-links .logout-btn:hover {
+            color: #c0392b;
+        }
+        main {
+            display: flex;
+            gap: 30px;
+            padding: 30px;
+            box-sizing: border-box;
+            flex-wrap: wrap;
+        }
+        section {
+            background: #1a1d20;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #2c3136;
+            box-sizing: border-box;
+        }
+        .form-section {
+            width: 48%;
+            min-width: 320px;
+            flex-grow: 1;
+        }
+        .info-section {
+            width: 48%;
+            min-width: 320px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        .candidate-section {
+            width: 100%;
+        }
+        h3 {
+            margin-top: 0;
+            color: #2ecc71;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #2c3136;
+            padding-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .form-row > div {
+            flex: 1;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #b0b7bd;
+            font-size: 0.9rem;
+        }
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #2c3136;
+            background: #25292d;
+            color: #fff;
+            font-size: 0.95rem;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #2ecc71;
+        }
+        input[type="file"] {
+            color: #b0b7bd;
+        }
+        button[type="submit"] {
+            width: 100%;
+            background: #2ecc71;
+            color: #121416;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+        button[type="submit"]:hover {
+            background: #27ae60;
+        }
+        .data-card {
+            background: #25292d;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #2c3136;
+        }
+        .item-box {
+            background: #1a1d20;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            border: 1px solid #2c3136;
+        }
+        .item-box strong {
+            color: #ffffff;
+        }
+        .item-box span {
+            color: #b0b7bd;
+            font-size: 0.9rem;
+        }
+        .response-card {
+            background: #25292d;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #2c3136;
+        }
+        .quote-block {
+            margin: 10px 0;
+            padding: 10px 15px;
+            border-left: 3px solid #2ecc71;
+            background: #1a1d20;
+            font-style: italic;
+            color: #e3e6e8;
+        }
+        .resume-link {
+            color: #2ecc71;
+            font-weight: bold;
+            text-decoration: none;
+            border-bottom: 1px dashed #2ecc71;
+        }
+        .resume-link:hover {
+            color: #27ae60;
+            border-bottom-color: #27ae60;
+        }
+        .status-badge {
+            background: #2c3136;
+            color: #2ecc71;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            border: 1px solid #2ecc71;
+        }
+        .flex-row-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>HR-Портал — Личный кабинет</h1>
+        <p>Добро пожаловать, <strong>{{ session.get('user_name') }}</strong> ({{ 'Рекрутер' if role == 'recruiter' else 'Соискатель' }})</p>
+        <nav class="nav-links" style="margin-top: 10px;">
+            <a href="/">Главная</a> | 
+            <a href="/vacancies">Каталог вакансий</a> | 
+            <a href="/logout" class="logout-btn">Выйти</a>
+        </nav>
+    </header>
+
+    <main>
+        
+        {% if role == 'recruiter' %}
+            
+            <section class="form-section">
+                <h3>Добавить новую вакансию</h3>
+                
+                <form action="/api/add_vacancy" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label>Название должности</label>
+                        <input type="text" name="title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Логотип компании (ФОТО)</label>
+                        <input type="file" name="company_logo" accept="image/*">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Категория / Сфера</label>
+                        <select name="category">
+                            <option value="IT">IT / Разработка</option>
+                            <option value="Marketing">Маркетинг / PR</option>
+                            <option value="Transport">Транспорт / Логистика</option>
+                            <option value="Sales">Продажи</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div>
+                            <label>Зарплата от (₽)</label>
+                            <input type="number" name="salary_from">
+                        </div>
+                        <div>
+                            <label>Зарплата до (₽)</label>
+                            <input type="number" name="salary_to">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Опыт работы</label>
+                        <select name="experience">
+                            <option value="no_experience">Без опыта</option>
+                            <option value="1-3_years">От 1 до 3 лет</option>
+                            <option value="3-6_years">От 3 до 6 лет</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Тип занятости</label>
+                        <select name="employment_type">
+                            <option value="full-time">Полный день</option>
+                            <option value="remote">Удаленная работа</option>
+                            <option value="part-time">Частичная занятость</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div>
+                            <label>Компания</label>
+                            <input type="text" name="company_name" required>
+                        </div>
+                        <div>
+                            <label>Город</label>
+                            <input type="text" name="city" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Описание вакансии</label>
+                        <textarea name="description" rows="5" required style="font-family:inherit; min-height: 80px;"></textarea>
+                    </div>
+                    
+                    <button type="submit">Опубликовать вакансию</button>
+                </form>
+            </section>
+
+            <section class="info-section">
+                
+                <div class="data-card">
+                    <h3 style="color:#ffffff; border-bottom-color:#373c3e;">Ваши вакансии</h3>
+                    {% if vacancies %}
+                        {% for v in vacancies %}
+                            <div class="item-box">
+                                <strong>{{ v.title }}</strong> <br>
+                                <span>{{ v.company_name }} · {{ v.city }}</span>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p style="color:#b0b7bd; margin: 0;">Вы еще не создали ни одной вакансии.</p>
+                    {% endif %}
+                </div>
+
+                <div class="data-card">
+                    <h3 style="color:#ffffff; border-bottom-color:#373c3e;">Полученные отклики</h3>
+                    {% if responses %}
+                        {% for r in responses %}
+                            <div class="response-card">
+                                <p style="margin:0 0 6px 0;"><strong>Вакансия:</strong> <span style="color: #2ecc71;">{{ r.vacancy_title }}</span></p>
+                                <p style="margin:0 0 6px 0;"><strong>Кандидат:</strong> {{ r.full_name }} ({{ r.phone }})</p>
+                                <div class="quote-block">
+                                    "{{ r.cover_letter }}"
+                                </div>
+                                
+                                <p style="margin:0 0 15px 0; font-size: 0.95rem;">
+                                    <strong>Резюме:</strong> 
+                                    {% if r.resume_url %}
+                                        <a href="{{ r.resume_url }}" target="_blank" class="resume-link">📄 Открыть файл резюме</a>
+                                    {% else %}
+                                        <span style="color: #b0b7bd;">Не прикреплено</span>
+                                    {% endif %}
+                                </p>
+
+                                <div>
+                                    <label style="font-size:0.9rem; color:#b0b7bd; font-weight: bold;">Изменить статус:</label>
+                                    <select onchange="updateStatus('{{ r.id }}', this.value)" style="cursor: pointer;">
+                                        <option value="Новый" {% if r.status == 'Новый' %}selected{% endif %}>Новый</option>
+                                        <option value="Приглашение на собеседование" {% if r.status == 'Приглашение на собеседование' %}selected{% endif %}>Приглашение на собеседование</option>
+                                        <option value="Одобрен (Оффер)" {% if r.status == 'Одобрен (Оффер)' %}selected{% endif %}>Одобрен (Оффер)</option>
+                                        <option value="Отказ" {% if r.status == 'Отказ' %}selected{% endif %}>Отказ</option>
+                                    </select>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p style="color:#b0b7bd; margin: 0;">Откликов от кандидатов пока нет.</p>
+                    {% endif %}
+                </div>
+            </section>
+        
+        {% else %}
+            <section class="candidate-section">
+                <h3>Ваши отклики на вакансии</h3>
+                {% if responses %}
+                    {% for r in responses %}
+                        <div class="response-card flex-row-between">
+                            <div>
+                                <strong style="color:#2ecc71; font-size:1.1rem;">{{ r.title }}</strong><br>
+                                <span style="color:#b0b7bd; font-size: 0.95rem;">{{ r.company_name }} · {{ r.city }}</span>
+                            </div>
+                            
+                            <div class="status-badge">
+                                {{ r.status }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p style="color:#b0b7bd; margin: 0;">Вы еще не откликались на вакансии. Перейдите в каталог, чтобы найти работу!</p>
+                {% endif %}
+            </section>
+        {% endif %}
+
+    </main>
+
+    <script>
+    function updateStatus(responseId, newStatus) {
+        fetch(`/api/response/${responseId}/status`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: newStatus })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.success);
+            } else {
+                alert('Ошибка при сохранении статуса: ' + data.error);
+            }
+        })
+        .catch(err => {
+            console.error('Ошибка выполнения запроса:', err);
+            alert('Не удалось связаться с сервером.');
+        });
+    }
+    </script>
+</body>
+</html>

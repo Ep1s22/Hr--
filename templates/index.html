@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Кадровая Служба — Главная</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        body {
+            background-color: #121416;
+            color: #e3e6e8;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #1a1d20;
+            border-bottom: 2px solid #2ecc71;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #2ecc71;
+        }
+        header nav a {
+            color: #b0b7bd;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+            margin: 0 5px;
+        }
+        header nav a:hover {
+            color: #2ecc71;
+        }
+        .admin-link { color: #e74c3c !important; }
+        .admin-link:hover { color: #c0392b !important; }
+        .lk-link { color: #2ecc71 !important; }
+        .lk-link:hover { color: #27ae60 !important; }
+        .logout-link { color: #95a5a6 !important; }
+        
+        main {
+            padding: 40px 30px;
+            max-width: 800px;
+            margin: 50px auto;
+            background: #1a1d20;
+            border-radius: 12px;
+            border: 1px solid #2c3136;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        h2 {
+            color: #ffffff;
+            font-size: 1.8rem;
+            margin-top: 0;
+        }
+        p {
+            color: #b0b7bd;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>HR-Портал</h1>
+        <nav>
+            <a href="/">Главная</a> |
+            <a href="/vacancies">Каталог вакансий</a> |
+            {% if session.get('user_role') == 'admin' %}
+            <a href="/admin" class="admin-link" style="font-weight: bold;">Админ-панель</a> |
+            {% elif session.get('user_id') %}
+            <a href="/dashboard" class="lk-link" style="font-weight: bold;">Личный кабинет</a> |
+            {% else %}
+            <a href="/auth">Войти</a> |
+            {% endif %}
+            {% if session.get('user_id') %}
+            <a href="/logout" class="logout-link">Выйти</a>
+            {% endif %}
+        </nav>
+    </header>
+    <main>
+        <h2>Добро пожаловать на сайт кадровой службы!</h2>
+        <p>Перейдите в каталог, чтобы посмотреть доступные вакансии.</p>
+    </main>
+</body>
+</html>

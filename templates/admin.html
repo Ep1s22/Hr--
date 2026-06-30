@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель — HR-Портал</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/admin.css">
+    <style>
+        /* Темная тема и кастомный дизайн для Админ-панели */
+        body {
+            background-color: #121416;
+            color: #e3e6e8;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .admin-header {
+            background-color: #1a1d20;
+            border-bottom: 2px solid #2ecc71;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .admin-header h1 {
+            margin: 0;
+            font-size: 1.6rem;
+            color: #2ecc71;
+            font-weight: 700;
+        }
+        .admin-subtitle {
+            margin: 6px 0 0 0;
+            color: #b0b7bd;
+            font-size: 0.9rem;
+        }
+        .admin-header nav a {
+            color: #b0b7bd;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .admin-header nav a:hover {
+            color: #2ecc71;
+        }
+        .logout-link {
+            color: #e74c3c !important;
+            font-weight: bold;
+        }
+        .logout-link:hover {
+            color: #c0392b !important;
+        }
+        .admin-main {
+            padding: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+        
+        /* Карточки статистики */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+        .stat-card {
+            background: #1a1d20;
+            padding: 22px;
+            border-radius: 12px;
+            border: 1px solid #2c3136;
+            text-align: center;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+            transition: transform 0.2s;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            border-color: #2ecc71;
+        }
+        .stat-value {
+            display: block;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #2ecc71;
+            margin-bottom: 6px;
+        }
+        .stat-label {
+            color: #b0b7bd;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        
+        /* Вкладки (Табы) */
+        .admin-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #2c3136;
+            padding-bottom: 12px;
+        }
+        .tab-btn {
+            background: #1a1d20;
+            color: #b0b7bd;
+            border: 1px solid #2c3136;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+        .tab-btn:hover {
+            border-color: #2ecc71;
+            color: #ffffff;
+        }
+        .tab-btn.active {
+            background: #2ecc71;
+            color: #121416;
+            border-color: #2ecc71;
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
+        }
+        
+        /* Панели контента */
+        .admin-panel {
+            display: none;
+            background: #1a1d20;
+            padding: 30px;
+            border-radius: 14px;
+            border: 1px solid #2c3136;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+        .admin-panel.active {
+            display: block;
+        }
+        .admin-panel h2 {
+            margin-top: 0;
+            margin-bottom: 22px;
+            color: #ffffff;
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+        
+        /* Таблицы */
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid #2c3136;
+        }
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+        .admin-table th {
+            background-color: #25292d;
+            color: #ffffff;
+            padding: 14px 16px;
+            font-weight: 600;
+            border-bottom: 2px solid #2c3136;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+        .admin-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #2c3136;
+            color: #e3e6e8;
+            background-color: #1a1d20;
+        }
+        .admin-table tr:last-child td {
+            border-bottom: none;
+        }
+        .admin-table tr:hover td {
+            background-color: #212529;
+        }
+        
+        /* Выпадающие списки выбора роли / статуса */
+        .role-select, .admin-table select {
+            background: #25292d;
+            color: #ffffff;
+            border: 1px solid #2c3136;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .role-select:focus, .admin-table select:focus {
+            border-color: #2ecc71;
+        }
+        
+        /* Бейджи и Кнопки */
+        .badge {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .badge-admin {
+            background: rgba(231, 76, 60, 0.15);
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+        }
+        .btn-danger {
+            background: #e74c3c;
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        .btn-danger:active {
+            transform: scale(0.97);
+        }
+        .text-muted {
+            color: #596167;
+        }
+        .empty-msg {
+            color: #b0b7bd;
+            margin: 10px 0 0 0;
+            font-style: italic;
+        }
+        .admin-table a {
+            color: #2ecc71;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px dashed transparent;
+            transition: all 0.2s;
+        }
+        .admin-table a:hover {
+            color: #27ae60;
+            border-bottom-color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <header class="admin-header">
+        <div>
+            <h1>HR-Портал — Админ-панель</h1>
+            <p class="admin-subtitle">
+                {{ session.get('user_name') }} · {{ role_labels['admin'] }}
+            </p>
+        </div>
+        <nav>
+            <a href="/">Главная</a>
+            <a href="/vacancies">Каталог</a>
+            <a href="/logout" class="logout-link">Выйти</a>
+        </nav>
+    </header>
+
+    <main class="admin-main">
+        <section class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-value">{{ stats.users }}</span>
+                <span class="stat-label">Пользователей</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value">{{ stats.recruiters }}</span>
+                <span class="stat-label">Рекрутеров</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value">{{ stats.candidates }}</span>
+                <span class="stat-label">Соискателей</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value">{{ stats.vacancies }}</span>
+                <span class="stat-label">Вакансий</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value">{{ stats.responses }}</span>
+                <span class="stat-label">Откликов</span>
+            </div>
+        </section>
+
+        <div class="admin-tabs">
+            <button class="tab-btn active" data-tab="users">Пользователи</button>
+            <button class="tab-btn" data-tab="vacancies">Вакансии</button>
+            <button class="tab-btn" data-tab="responses">Отклики</button>
+        </div>
+
+        <section id="tab-users" class="admin-panel active">
+            <h2>Управление пользователями</h2>
+            {% if users %}
+            <div class="table-wrap">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Логин</th>
+                            <th>Email</th>
+                            <th>ФИО</th>
+                            <th>Телефон</th>
+                            <th>Роль</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in users %}
+                        <tr>
+                            <td>{{ u.id }}</td>
+                            <td>{{ u.username }}</td>
+                            <td>{{ u.email }}</td>
+                            <td>{{ u.full_name }}</td>
+                            <td>{{ u.phone }}</td>
+                            <td>
+                                {% if u.role == 'admin' %}
+                                    <span class="badge badge-admin">{{ role_labels[u.role] }}</span>
+                                {% else %}
+                                    <select class="role-select" data-user-id="{{ u.id }}" onchange="changeRole(this.getAttribute('data-user-id'), this.value)">
+                                        <option value="candidate" {% if u.role == 'candidate' %}selected{% endif %}>Соискатель</option>
+                                        <option value="recruiter" {% if u.role == 'recruiter' %}selected{% endif %}>Рекрутер</option>
+                                    </select>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if u.id != session.get('user_id') and u.role != 'admin' %}
+                                <button class="btn-danger" data-id="{{ u.id }}" data-username="{{ u.username }}" onclick="deleteUser(this.getAttribute('data-id'), this.getAttribute('data-username'))">Удалить</button>
+                                {% else %}
+                                <span class="text-muted">—</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="empty-msg">Пользователей нет.</p>
+            {% endif %}
+        </section>
+
+        <section id="tab-vacancies" class="admin-panel">
+            <h2>Все вакансии</h2>
+            {% if vacancies %}
+            <div class="table-wrap">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Название</th>
+                            <th>Компания</th>
+                            <th>Город</th>
+                            <th>Рекрутер</th>
+                            <th>Дата</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for v in vacancies %}
+                        <tr>
+                            <td>{{ v.id }}</td>
+                            <td>{{ v.title }}</td>
+                            <td>{{ v.company_name }}</td>
+                            <td>{{ v.city }}</td>
+                            <td>{{ v.recruiter_name or '—' }}</td>
+                            <td>{{ v.date_created[:10] if v.date_created else '—' }}</td>
+                            <td>
+                                <button class="btn-danger" data-id="{{ v.id }}" data-title="{{ v.title }}" onclick="deleteVacancy(this.getAttribute('data-id'), this.getAttribute('data-title'))">Удалить</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="empty-msg">Вакансий нет.</p>
+            {% endif %}
+        </section>
+
+        <section id="tab-responses" class="admin-panel">
+            <h2>Все отклики</h2>
+            {% if responses %}
+            <div class="table-wrap">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Вакансия</th>
+                            <th>Кандидат</th>
+                            <th>Резюме</th>
+                            <th>Дата</th>
+                            <th>Статус</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for r in responses %}
+                        <tr>
+                            <td>{{ r.id }}</td>
+                            <td>{{ r.vacancy_title }}</td>
+                            <td>{{ r.candidate_name }}</td>
+                            <td>
+                                {% if r.resume_url %}
+                                <a href="{{ r.resume_url }}" target="_blank">📄 Открыть</a>
+                                {% else %}
+                                <span class="text-muted">Нет</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ r.date_created[:10] if r.date_created else '—' }}</td>
+                            <td>
+                                <select data-id="{{ r.id }}" onchange="updateResponseStatus(this.getAttribute('data-id'), this.value)">
+                                    <option value="Новый" {% if r.status == 'Новый' %}selected{% endif %}>Новый</option>
+                                    <option value="Приглашение на собеседование" {% if r.status == 'Приглашение на собеседование' %}selected{% endif %}>Приглашение</option>
+                                    <option value="Одобрен (Оффер)" {% if r.status == 'Одобрен (Оффер)' %}selected{% endif %}>Оффер</option>
+                                    <option value="Отказ" {% if r.status == 'Отказ' %}selected{% endif %}>Отказ</option>
+                                </select>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="empty-msg">Откликов нет.</p>
+            {% endif %}
+        </section>
+    </main>
+
+    <script src="/static/js/admin.js"></script>
+</body>
+</html>

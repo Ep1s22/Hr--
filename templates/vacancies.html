@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Каталог вакансий</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        body {
+            background-color: #121416;
+            color: #e3e6e8;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            padding: 15px 30px;
+            background-color: #1a1d20;
+            border-bottom: 2px solid #2ecc71;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #2ecc71;
+        }
+        header nav a {
+            color: #b0b7bd;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        header nav a:hover {
+            color: #2ecc71;
+        }
+        main {
+            display: flex;
+            gap: 30px;
+            padding: 30px;
+            width: 100%;
+            box-sizing: border-box;
+            flex-wrap: wrap;
+        }
+        aside {
+            width: 25%;
+            min-width: 280px;
+            background: #1a1d20;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #2c3136;
+            height: fit-content;
+            box-sizing: border-box;
+        }
+        aside h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #ffffff;
+            font-size: 1.2rem;
+            border-bottom: 1px solid #2c3136;
+            padding-bottom: 8px;
+        }
+        .filter-group {
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .filter-group label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            color: #b0b7bd;
+            font-size: 0.9rem;
+        }
+        input[type="text"], select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #2c3136;
+            background: #25292d;
+            color: #fff;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2ecc71;
+        }
+        .radio-container label {
+            font-weight: normal;
+            display: block;
+            margin-bottom: 6px;
+            cursor: pointer;
+            color: #e3e6e8;
+        }
+        #reset-filters {
+            width: 100%;
+            background: #343a40;
+            color: #fff;
+            border: 1px solid #495057;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        #reset-filters:hover {
+            background: #495057;
+        }
+        section {
+            flex-grow: 1;
+            width: 70%;
+            min-width: 320px;
+            background-color: #1a1d20;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #2c3136;
+            box-sizing: border-box;
+        }
+        section h2 {
+            margin-top: 0;
+            color: #ffffff;
+            font-size: 1.4rem;
+            border-bottom: 1px solid #2c3136;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        #vacancies-container {
+            width: 100%;
+            color: #1a1d20;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>HR-Портал</h1>
+        <nav>
+            <a href="/">Главная</a> | 
+            <a href="/vacancies">Каталог вакансий</a>
+        </nav>
+    </header>
+    
+    <main>
+        <aside>
+            <h3>Фильтры</h3>
+            
+            <form id="filter-form">
+                <div class="filter-group">
+                    <label>Поиск</label>
+                    <input type="text" id="search-input" placeholder="Поиск по названию, тексту...">
+                </div>
+
+                <div class="filter-group">
+                    <label>Категория</label>
+                    <select name="category" id="category-select">
+                        <option value="">Все категории</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Опыт работы</label>
+                    <div id="experience-container" class="radio-container">
+                        <label>
+                            <input type="radio" name="experience" value="" checked> Не важно
+                        </label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label>Тип занятости</label>
+                    <div id="employment-container" class="radio-container">
+                    </div>
+                </div>
+
+                <button type="button" id="reset-filters">
+                    Сбросить фильтры
+                </button>
+            </form>
+        </aside>
+
+        <section>
+            <h2>Список вакансий</h2>
+            <div id="vacancies-container">
+                <p>Загрузка вакансий...</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="/static/js/catalog.js"></script>
+</body>
+</html>
